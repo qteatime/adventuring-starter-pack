@@ -1,0 +1,20 @@
+{
+  "title": "Adventuring Starter Pack",
+  "description": "Start your crocheted adventure here!",
+  "name": "me.qteati.adventuring-starter-pack",
+  "target": "*",
+  "native_sources": [],
+  "sources": [
+    "source/types.crochet",
+    "source/torch-system/types.crochet",
+    "source/torch-system/power-grid.crochet",
+    "source/torch-system/power-cell.crochet",
+    "source/torch-system/torch-system.crochet",
+    "source/main.crochet"
+  ],
+  "dependencies": ["crochet.core"],
+  "capabilities": {
+    "requires": [],
+    "provides": []
+  }
+}

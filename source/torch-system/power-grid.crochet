@@ -1,0 +1,29 @@
+% crochet
+
+command power-grid attach: (Cell is power-cell)
+requires
+  does-not-have-cell :: not (self cells contains: Cell)
+do
+  self.cells <- self.cells value add: Cell;
+  self;
+end
+
+command power-grid take-out: (Cell is power-cell)
+requires
+  has-cell :: self cells contains: Cell
+do
+  self.cells <- self.cells value remove: Cell;
+  self;
+end
+
+command power-grid cells =
+  self.cells value;
+
+command power-grid drained-cells =
+  self.cells value keep-if: { X in not (X has-energy) };
+
+command debug-representation for: (Grid is power-grid) perspective: (P is default-perspective) do
+  let Cells = Grid cells values map: (debug-representation for: _ perspective: P);
+  #document flex-row: Cells
+    | gap: (2.0 as doc-em);
+end

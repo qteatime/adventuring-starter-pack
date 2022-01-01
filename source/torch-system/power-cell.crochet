@@ -1,0 +1,90 @@
+% crochet
+
+implement power-cell for power-cell;
+
+command #power-cell red: (Value is integer)
+requires
+  byte-value :: (Value >= 0) and (Value <= 255)
+do
+  new power-cell-red(Value, #cell with-value: 100);
+end
+
+command #power-cell blue: (Value is integer)
+requires
+  byte-value :: (Value >= 0) and (Value <= 255)
+do
+  new power-cell-blue(Value, #cell with-value: 100);
+end
+
+command #power-cell green: (Value is integer)
+requires
+  byte-value :: (Value >= 0) and (Value <= 255)
+do
+  new power-cell-green(Value, #cell with-value: 100);
+end
+
+command #power-cell alpha: (Value is integer)
+requires
+  byte-value :: (Value >= 0) and (Value <= 255)
+do
+  new power-cell-alpha(Value, #cell with-value: 100);
+end
+
+
+
+/// A descriptive name for the power cell
+command power-cell-red name = "Red";
+command power-cell-blue name = "Blue";
+command power-cell-green name = "Green";
+command power-cell-alpha name = "Alpha";
+
+/// The amount of energy left in the power cell
+command power-cell-red energy = self.energy value;
+command power-cell-blue energy = self.energy value;
+command power-cell-green energy = self.energy value;
+command power-cell-alpha energy = self.energy value;
+
+command power-cell has-energy = self energy > 0;
+
+/// The colour of a power cell
+command internal colour: (Cell is power-cell-red) =
+  #doc-colour red: Cell.value green: 0 blue: 0 alpha: 255;
+
+command internal colour: (Cell is power-cell-blue) =
+  #doc-colour red: 0 green: 0 blue: Cell.value alpha: 255;
+
+command internal colour: (Cell is power-cell-green) =
+  #doc-colour red: 0 green: Cell.value blue: 0 alpha: 255;
+
+command internal colour: (Cell is power-cell-alpha) =
+  #doc-colour red: Cell.value green: Cell.value blue: Cell.value alpha: 255;
+
+
+/// A cute representation of the power cell (for trouble-shooting)
+command debug-representation for: (Cell is power-cell) perspective: default-perspective do
+  let Origin = (#doc-point2d x: 0 y: 0);
+  let Size = (#doc-dimension width: 40 height: 100);
+  let Black = (#doc-colour red: 0 green: 0 blue: 0 alpha: 255);
+  let Fill = internal colour: Cell;
+
+  #document flex-column: [
+    #document plain-text: Cell name,
+
+    #document fixed-width: 40 height: 100 with: [
+      #document rectangle
+        | origin: Origin
+        | size: (Size | height: Cell energy)
+        | style: (#document style | fill-colour: Fill)
+        | position: (Origin | y: (100 - Cell energy)),
+
+      #document rectangle
+        | origin: Origin
+        | size: Size
+        | style: (#document style | stroke-colour: Black | stroke-width: 1)
+        | position: Origin
+    ],
+
+    #document plain-text: "[Cell energy to-text]%"
+  ]
+  | gap: (1.0 as doc-em);
+end

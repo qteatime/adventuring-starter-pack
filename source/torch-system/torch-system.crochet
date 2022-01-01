@@ -1,0 +1,32 @@
+% crochet
+
+define torch-system = lazy (
+  new torch-system(
+    new power-grid(
+      #cell with-value: #set empty
+    )
+  )
+);
+
+prelude
+  let Red = #power-cell red: 100;
+  Red.energy <- 0;
+  simulation torch-system power-grid
+    | attach: Red
+    | attach: (#power-cell green: 100)
+    | attach: (#power-cell blue: 100)
+    | attach: (#power-cell alpha: 100);
+end
+
+command simulation torch-system =
+  force torch-system;
+
+command torch-system start
+requires
+  power-grid-is-complete :: self power-grid cells all: (_ has-energy)
+do
+
+end
+
+command torch-system power-grid =
+  self.power-grid;

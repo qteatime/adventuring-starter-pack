@@ -1,0 +1,16 @@
+% crochet
+
+abstract power-cell;
+type power-cell-red(value is integer, energy is cell<integer>) is power-cell;
+type power-cell-blue(value is integer, energy is cell<integer>) is power-cell;
+type power-cell-green(value is integer, energy is cell<integer>) is power-cell;
+type power-cell-alpha(value is integer, energy is cell<integer>) is power-cell;
+
+trait power-cell with
+  command Cell name -> text;
+  command Cell energy -> integer;
+end
+
+type power-grid(cells is cell<set<power-cell>>);
+
+type torch-system(power-grid is power-grid);
