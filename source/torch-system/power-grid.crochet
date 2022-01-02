@@ -20,7 +20,29 @@ command power-grid cells =
   self.cells value;
 
 command power-grid drained-cells =
-  self.cells value keep-if: { X in not (X has-energy) };
+  self cells keep-if: { X in not (X has-energy) };
+
+command power-grid healthy-cells =
+  self cells keep-if: (_ has-energy);
+
+command power-grid cell-groups do
+  let Groups = #map empty
+                 | at: cell-type-red put: []
+                 | at: cell-type-blue put: []
+                 | at: cell-type-green put: []
+                 | at: cell-type-alpha put: [];
+  self cells fold-from: Groups with: { Groups, Cell in
+    let Type = Cell cell-type;
+    let Cells-in-group = Groups at: Type;
+    Groups at: Type put: (Cells-in-group append: Cell);
+  };
+end
+
+command power-grid is-complete do
+  let Types = [cell-type-red, cell-type-blue, cell-type-green, cell-type-alpha];
+  let Groups = self cell-groups;
+  Types all: { Type in not (Groups at: Type | is-empty) };
+end
 
 command debug-representation for: (Grid is power-grid) perspective: (P is default-perspective) do
   let Cells = Grid cells values map: (debug-representation for: _ perspective: P);

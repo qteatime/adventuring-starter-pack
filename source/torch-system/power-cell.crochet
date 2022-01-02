@@ -30,7 +30,16 @@ do
   new power-cell-alpha(Value, #cell with-value: 100);
 end
 
+command cell-type-red name = "Red";
+command cell-type-blue name = "Blue";
+command cell-type-green name = "Green";
+command cell-type-alpha name = "Alpha";
 
+/// The type of the power cell
+command power-cell-red cell-type = cell-type-red;
+command power-cell-blue cell-type = cell-type-blue;
+command power-cell-green cell-type = cell-type-green;
+command power-cell-alpha cell-type = cell-type-alpha;
 
 /// A descriptive name for the power cell
 command power-cell-red name = "Red";
@@ -60,6 +69,13 @@ command internal colour: (Cell is power-cell-alpha) =
   #doc-colour red: Cell.value green: Cell.value blue: Cell.value alpha: 255;
 
 
+command power-cell-red order = 1;
+command power-cell-blue order = 2;
+command power-cell-green order = 3;
+command power-cell-alpha order = 4;
+
+command (A is power-cell) compare-to: (B is power-cell) = A order compare-to: B order;
+
 /// A cute representation of the power cell (for trouble-shooting)
 command debug-representation for: (Cell is power-cell) perspective: default-perspective do
   let Origin = (#doc-point2d x: 0 y: 0);
@@ -88,3 +104,15 @@ command debug-representation for: (Cell is power-cell) perspective: default-pers
   ]
   | gap: (1.0 as doc-em);
 end
+
+command debug-representation for: cell-type-red perspective: default-perspective =
+  #document plain-text: "Red";
+
+command debug-representation for: cell-type-blue perspective: default-perspective =
+  #document plain-text: "Blue";
+
+command debug-representation for: cell-type-green perspective: default-perspective =
+  #document plain-text: "Green";
+
+command debug-representation for: cell-type-alpha perspective: default-perspective =
+  #document plain-text: "Alpha";

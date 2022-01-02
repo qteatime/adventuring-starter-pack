@@ -1,0 +1,163 @@
+% crochet
+
+command #light-spheres from: (Cells is list<power-cell>)
+requires
+  four-cells :: Cells count === 4
+do
+  new light-spheres(Cells);
+end
+
+command #light-spheres from: (Power-grid is power-grid) do
+  let Cells = Power-grid cell-groups
+                | map: { Pair in Pair value first }
+                | values
+                | sort-by: (_ compare-to: _);
+  #light-spheres from: Cells;
+end
+
+
+command internal colour: (Cell is power-cell-red) hue: cell-type-red =
+  #doc-colour red: Cell.value green: 0 blue: 0 alpha: 255;
+
+command internal colour: (Cell is power-cell-green) hue: cell-type-green =
+  #doc-colour red: 0 green: Cell.value blue: 0 alpha: 255;
+
+command internal colour: (Cell is power-cell-blue) hue: cell-type-blue =
+  #doc-colour red: 0 green: 0 blue: Cell.value alpha: 255;
+
+command internal colour: (Cell is power-cell-alpha) hue: cell-type-alpha =
+  #doc-colour red: Cell.value green: Cell.value blue: Cell.value alpha: 255;
+
+command internal colour: power-cell hue: cell-type =
+  #doc-colour transparent;
+
+
+command internal sphere: (Cell is power-cell) hue: (Type is cell-type) do
+  let Fill = internal colour: Cell hue: Type;
+  let Black = #doc-colour red: 0 green: 0 blue: 0 alpha: 255;
+
+  #document circle
+    | center: (#doc-point2d x: 15 y: 15)
+    | radius: 15
+    | style: (#document style | stroke-colour: Black | stroke-width: 1 | fill-colour: Fill);
+end
+
+command internal light-sphere-red: (R is power-cell-red)
+                 green: (G is power-cell-green)
+                 blue: (B is power-cell-blue)
+                 alpha: (A is power-cell-alpha)
+do
+  #doc-colour red: R.value green: G.value blue: B.value alpha: A.value;
+end
+
+command internal light-sphere-red: power-cell green: power-cell blue: power-cell alpha: power-cell =
+  #doc-colour transparent;
+
+
+command debug-representation for: (Spheres is light-spheres) perspective: default-perspective do
+  let Red = Spheres.cells at: 1;
+  let Green = Spheres.cells at: 2;
+  let Blue = Spheres.cells at: 3;
+  let Alpha = Spheres.cells at: 4;
+  let Black = #doc-colour red: 0 green: 0 blue: 0 alpha: 255;
+  let Grey = #doc-colour red: 50 green: 50 blue: 50 alpha: 255;
+  let Fill = internal light-sphere-red: Red green: Green blue: Blue alpha: Alpha;
+  let Line = #document style
+              | stroke-width: 1
+              | stroke-colour: Black;
+  let Center-x = 185;
+  let Center-y = 135;
+  
+  #document fixed-width: 500 height: 300 with: [
+    #document rectangle
+      | origin: #doc-point2d zero
+      | size: (#doc-dimension width: 200 height: 200)
+      | roundness: (#doc-point2d x: 5 y: 5)
+      | style: (#document style | stroke-colour: Black | stroke-width: 1 | fill-colour: Fill)
+      | position: (#doc-point2d x: 100 y: 50),
+
+    internal sphere: Red hue: cell-type-red
+      | position: (#doc-point2d x: Center-x y: 35),
+
+    internal sphere: Green hue: cell-type-green
+      | position: (#doc-point2d x: 285 y: Center-y),
+
+    internal sphere: Blue hue: cell-type-blue
+      | position: (#doc-point2d x: Center-x y: 235),
+
+    internal sphere: Alpha hue: cell-type-alpha
+      | position: (#doc-point2d x: 85 y: Center-y),
+
+    #document polyline: [
+      #doc-point2d x: (Center-x + 15) y: 50,
+      #doc-point2d x: (Center-x + 15 + 50) y: 25,
+      #doc-point2d x: (Center-x + 15 + 100) y: 25
+    ] 
+    | style: Line
+    | position: #doc-point2d zero,
+
+    #document plain-text: "Red"
+      | position: (#doc-point2d x: (Center-x + 20 + 100) y: 15),
+
+    #document polyline: [
+      #doc-point2d x: (285 + 15) y: (Center-y + 15),
+      #doc-point2d x: (285 + 15 + 50) y: (Center-y + 15)
+    ]
+    | style: Line
+    | position: #doc-point2d zero,
+
+    #document plain-text: "Green"
+      | position: (#doc-point2d x: (285 + 15 + 55) y: (Center-y + 5)),
+
+    #document polyline: [
+      #doc-point2d x: (Center-x + 15) y: (235 + 15),
+      #doc-point2d x: (Center-x + 15 + 50) y: (235 + 15 + 25),
+      #doc-point2d x: (Center-x + 15 + 100) y: (235 + 15 + 25)
+    ]
+    | style: Line
+    | position: #doc-point2d zero,
+
+    #document plain-text: "Blue"
+      | position: (#doc-point2d x: (Center-x + 20 + 100) y: (235 + 15 + 15)),
+
+    #document polyline: [
+      #doc-point2d x: (85 + 15) y: (Center-y + 15),
+      #doc-point2d x: ((85 + 15) - 50) y: (Center-y + 15)
+    ]
+    | style: Line
+    | position: #doc-point2d zero,
+
+    #document plain-text: "Alpha"
+      | position: (#doc-point2d x: 5 y: (Center-y + 5)),
+  ];
+end
+
+command internal light-error: (Cell is power-cell) hue: (Hue is cell-type) do
+  condition
+    when Cell cell-type =:= Hue => nothing;
+    otherwise => "[Hue name] slot was filled with a [Cell name] power cell.";
+  end
+end
+
+
+command debug-representation for: (Spheres is light-spheres) perspective: error-perspective do
+  let Red = Spheres.cells at: 1;
+  let Green = Spheres.cells at: 2;
+  let Blue = Spheres.cells at: 3;
+  let Alpha = Spheres.cells at: 4;
+
+  let Errors = [
+    internal light-error: Red hue: cell-type-red,
+    internal light-error: Green hue: cell-type-green,
+    internal light-error: Blue hue: cell-type-blue,
+    internal light-error: Alpha hue: cell-type-alpha,
+  ]
+  | remove-if: { X in X is nothing }
+  | map: (#document plain-text: _);
+
+  #document flex-column: [
+    #document plain-text: "[Errors count to-text] errors found.",
+    #document list: Errors
+  ]
+  | gap: (1.0 as doc-em);
+end

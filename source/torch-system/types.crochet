@@ -6,11 +6,19 @@ type power-cell-blue(value is integer, energy is cell<integer>) is power-cell;
 type power-cell-green(value is integer, energy is cell<integer>) is power-cell;
 type power-cell-alpha(value is integer, energy is cell<integer>) is power-cell;
 
+enum cell-type =
+  cell-type-red,
+  cell-type-blue,
+  cell-type-green,
+  cell-type-alpha;
+
 trait power-cell with
+  command Cell cell-type -> cell-type;
   command Cell name -> text;
   command Cell energy -> integer;
 end
 
 type power-grid(cells is cell<set<power-cell>>);
+type light-spheres(cells is list<power-cell>);
 
 type torch-system(power-grid is power-grid);

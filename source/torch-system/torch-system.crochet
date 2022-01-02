@@ -8,14 +8,18 @@ define torch-system = lazy (
   )
 );
 
-prelude
+command torch-system reset do
   let Red = #power-cell red: 100;
   Red.energy <- 0;
-  simulation torch-system power-grid
+  self power-grid
     | attach: Red
     | attach: (#power-cell green: 100)
     | attach: (#power-cell blue: 100)
     | attach: (#power-cell alpha: 100);
+end
+
+prelude
+  (force torch-system) reset;
 end
 
 command simulation torch-system =
@@ -23,9 +27,10 @@ command simulation torch-system =
 
 command torch-system start
 requires
-  power-grid-is-complete :: self power-grid cells all: (_ has-energy)
+  power-grid-is-healthy :: self power-grid cells all: (_ has-energy),
+  power-grid-is-complete :: self power-grid is-complete
 do
-
+  "Starting...";
 end
 
 command torch-system power-grid =

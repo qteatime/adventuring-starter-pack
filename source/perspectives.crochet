@@ -1,0 +1,5 @@
+% crochet
+
+implement debug-perspective for error-perspective;
+
+command error-perspective name = "Errors";
