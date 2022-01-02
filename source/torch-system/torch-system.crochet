@@ -28,10 +28,14 @@ command simulation torch-system =
 command torch-system start
 requires
   power-grid-is-healthy :: self power-grid cells all: (_ has-energy),
-  power-grid-is-complete :: self power-grid is-complete
+  power-grid-is-complete :: self power-grid is-complete,
+  light-spheres-is-healthy :: self light-spheres has-correct-slots
 do
   "Starting...";
 end
 
 command torch-system power-grid =
   self.power-grid;
+
+command torch-system light-spheres =
+  #light-spheres from: self power-grid;

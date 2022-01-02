@@ -15,6 +15,11 @@ command #light-spheres from: (Power-grid is power-grid) do
   #light-spheres from: Cells;
 end
 
+command light-spheres has-correct-slots do
+  let Slots = [cell-type-red, cell-type-green, cell-type-blue, cell-type-alpha];
+  Slots zip: self.cells with: { Slot, Cell in Slot =:= Cell cell-type }
+    | all-true;
+end
 
 command internal colour: (Cell is power-cell-red) hue: cell-type-red =
   #doc-colour red: Cell.value green: 0 blue: 0 alpha: 255;
