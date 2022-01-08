@@ -80,7 +80,6 @@ command (A is power-cell) compare-to: (B is power-cell) = A order compare-to: B 
 command debug-representation for: (Cell is power-cell) perspective: default-perspective do
   let Origin = (#doc-point2d x: 0 y: 0);
   let Size = (#doc-dimension width: 40 height: 100);
-  let Black = (#doc-colour red: 0 green: 0 blue: 0 alpha: 255);
   let Fill = internal colour: Cell;
 
   #document flex-column: [
@@ -90,13 +89,12 @@ command debug-representation for: (Cell is power-cell) perspective: default-pers
       #document rectangle
         | origin: Origin
         | size: (Size | height: Cell energy)
-        | style: (#document style | fill-colour: Fill)
+        | style: { S in S fill-colour: Fill }
         | position: (Origin | y: (100 - Cell energy)),
 
       #document rectangle
         | origin: Origin
         | size: Size
-        | style: (#document style | stroke-colour: Black | stroke-width: 1)
         | position: Origin
     ],
 

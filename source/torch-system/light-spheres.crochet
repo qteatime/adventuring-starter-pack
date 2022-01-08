@@ -39,12 +39,11 @@ command internal colour: power-cell hue: cell-type =
 
 command internal sphere: (Cell is power-cell) hue: (Type is cell-type) do
   let Fill = internal colour: Cell hue: Type;
-  let Black = #doc-colour red: 0 green: 0 blue: 0 alpha: 255;
 
   #document circle
     | center: (#doc-point2d x: 15 y: 15)
     | radius: 15
-    | style: (#document style | stroke-colour: Black | stroke-width: 1 | fill-colour: Fill);
+    | style: { S in S fill-colour: Fill }
 end
 
 command internal light-sphere-red: (R is power-cell-red)
@@ -64,12 +63,9 @@ command debug-representation for: (Spheres is light-spheres) perspective: defaul
   let Green = Spheres.cells at: 2;
   let Blue = Spheres.cells at: 3;
   let Alpha = Spheres.cells at: 4;
-  let Black = #doc-colour red: 0 green: 0 blue: 0 alpha: 255;
-  let Grey = #doc-colour red: 50 green: 50 blue: 50 alpha: 255;
+  let Black = "#000000";
+  let Grey = "#7f7f7f";
   let Fill = internal light-sphere-red: Red green: Green blue: Blue alpha: Alpha;
-  let Line = #document style
-              | stroke-width: 1
-              | stroke-colour: Black;
   let Center-x = 185;
   let Center-y = 135;
   
@@ -78,7 +74,7 @@ command debug-representation for: (Spheres is light-spheres) perspective: defaul
       | origin: #doc-point2d zero
       | size: (#doc-dimension width: 200 height: 200)
       | roundness: (#doc-point2d x: 5 y: 5)
-      | style: (#document style | stroke-colour: Black | stroke-width: 1 | fill-colour: Fill)
+      | style: { S in S fill-colour: Fill }
       | position: (#doc-point2d x: 100 y: 50),
 
     internal sphere: Red hue: cell-type-red
@@ -97,9 +93,7 @@ command debug-representation for: (Spheres is light-spheres) perspective: defaul
       #doc-point2d x: (Center-x + 15) y: 50,
       #doc-point2d x: (Center-x + 15 + 50) y: 25,
       #doc-point2d x: (Center-x + 15 + 100) y: 25
-    ] 
-    | style: Line
-    | position: #doc-point2d zero,
+    ],
 
     #document plain-text: "Red"
       | position: (#doc-point2d x: (Center-x + 20 + 100) y: 15),
@@ -107,9 +101,7 @@ command debug-representation for: (Spheres is light-spheres) perspective: defaul
     #document polyline: [
       #doc-point2d x: (285 + 15) y: (Center-y + 15),
       #doc-point2d x: (285 + 15 + 50) y: (Center-y + 15)
-    ]
-    | style: Line
-    | position: #doc-point2d zero,
+    ],
 
     #document plain-text: "Green"
       | position: (#doc-point2d x: (285 + 15 + 55) y: (Center-y + 5)),
@@ -118,9 +110,7 @@ command debug-representation for: (Spheres is light-spheres) perspective: defaul
       #doc-point2d x: (Center-x + 15) y: (235 + 15),
       #doc-point2d x: (Center-x + 15 + 50) y: (235 + 15 + 25),
       #doc-point2d x: (Center-x + 15 + 100) y: (235 + 15 + 25)
-    ]
-    | style: Line
-    | position: #doc-point2d zero,
+    ],
 
     #document plain-text: "Blue"
       | position: (#doc-point2d x: (Center-x + 20 + 100) y: (235 + 15 + 15)),
@@ -128,9 +118,7 @@ command debug-representation for: (Spheres is light-spheres) perspective: defaul
     #document polyline: [
       #doc-point2d x: (85 + 15) y: (Center-y + 15),
       #doc-point2d x: ((85 + 15) - 50) y: (Center-y + 15)
-    ]
-    | style: Line
-    | position: #doc-point2d zero,
+    ],
 
     #document plain-text: "Alpha"
       | position: (#doc-point2d x: 5 y: (Center-y + 5)),
